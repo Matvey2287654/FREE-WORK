@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - FREE WORK{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Найдите идеального фрилансера для вашего проекта</h1>
+        <p>Или начните зарабатывать на своих навыках</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('create_job') }}" class="btn btn-primary btn-large">Разместить заказ</a>
+            <a href="{{ url_for('register') }}" class="btn btn-outline btn-large">Стать фрилансером</a>
+        </div>
+    </div>
+</section>
+
+<section class="categories">
+    <h2>Популярные категории</h2>
+    <div class="category-grid">
+        <a href="{{ url_for('job_list', category='web') }}" class="category-card">
+            <i class="fas fa-code"></i>
+            <span>Веб-разработка</span>
+        </a>
+        <a href="{{ url_for('job_list', category='design') }}" class="category-card">
+            <i class="fas fa-paint-brush"></i>
+            <span>Дизайн</span>
+        </a>
+        <a href="{{ url_for('job_list', category='marketing') }}" class="category-card">
+            <i class="fas fa-bullhorn"></i>
+            <span>Маркетинг</span>
+        </a>
+        <a href="{{ url_for('job_list', category='writing') }}" class="category-card">
+            <i class="fas fa-pen-fancy"></i>
+            <span>Копирайтинг</span>
+        </a>
+        <a href="{{ url_for('job_list', category='mobile') }}" class="category-card">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Мобильные приложения</span>
+        </a>
+        <a href="{{ url_for('job_list', category='seo') }}" class="category-card">
+            <i class="fas fa-search"></i>
+            <span>SEO</span>
+        </a>
+    </div>
+</section>
+
+<section class="latest-jobs">
+    <h2>Последние заказы</h2>
+    <div class="job-list">
+        {% for job in jobs %}
+        <div class="job-card">
+            <div class="job-header">
+                <h3><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a></h3>
+                <span class="budget">{{ job.budget }} ₽</span>
+            </div>
+            <p class="description">{{ job.description|truncate(150) }}</p>
+            <div class="job-footer">
+                <span class="category">{{ job.category }}</span>
+                <span class="time">{{ job.created_at|time_ago }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('job_list') }}" class="btn btn-outline">Все заказы</a>
+</section>
+
+<section class="top-freelancers">
+    <h2>Популярные фрилансеры</h2>
+    <div class="freelancer-grid">
+        {% for freelancer in freelancers %}
+        <div class="freelancer-card">
+            <a href="{{ url_for('view_profile', username=freelancer.username) }}">
+                <img src="{{ url_for('static', filename='uploads/' + freelancer.avatar) if freelancer.avatar else url_for('static', filename='images/default-avatar.png') }}" alt="{{ freelancer.username }}">
+            </a>
+            <h3><a href="{{ url_for('view_profile', username=freelancer.username) }}">{{ freelancer.username }}</a></h3>
+            <p class="skills">{{ freelancer.skills|truncate(50) if freelancer.skills else "Навыки не указаны" }}</p>
+            <div class="rating">
+                <span class="stars">★★★★★</span>
+                <span class="reviews">(24 отзыва)</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="how-it-works">
+    <h2>Как это работает?</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Создайте заказ</h3>
+            <p>Опишите ваш проект и установите бюджет</p>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Получайте заявки</h3>
+            <p>Фрилансеры предложат свои услуги и цены</p>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Выберите исполнителя</h3>
+            <p>Просмотрите портфолио и отзывы, выберите лучшего</p>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Оплатите работу</h3>
+            <p>Безопасная сделка с гарантией качества</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
