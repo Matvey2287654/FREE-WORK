@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREE WORK - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}">FREE WORK</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('job_list') }}">Заказы</a></li>
+                    <li><a href="#">Фрилансеры</a></li>
+                    <li><a href="#">Как это работает?</a></li>
+                </ul>
+            </nav>
+            <div class="auth">
+                {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="dropbtn">
+                            <img src="{{ url_for('static', filename='uploads/' + current_user.avatar) if current_user.avatar else url_for('static', filename='images/default-avatar.png') }}" alt="Avatar">
+                            {{ current_user.username }}
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('view_profile', username=current_user.username) }}">Мой профиль</a>
+                            <a href="{{ url_for('edit_profile') }}">Настройки</a>
+                            <a href="{{ url_for('inbox') }}">Сообщения</a>
+                            {% if current_user.is_freelancer %}
+                                <a href="{{ url_for('view_profile', username=current_user.username) }}#portfolio">Портфолио</a>
+                            {% else %}
+                                <a href="{{ url_for('create_job') }}">Создать заказ</a>
+                            {% endif %}
+                            <a href="{{ url_for('logout') }}">Выйти</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline">Вход</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-section">
+                <h3>FREE WORK</h3>
+                <p>Лучшая фриланс-платформа для поиска работы и исполнителей</p>
+            </div>
+            <div class="footer-section">
+                <h3>Навигация</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Главная</a></li>
+                    <li><a href="{{ url_for('job_list') }}">Заказы</a></li>
+                    <li><a href="#">Фрилансеры</a></li>
+                    <li><a href="#">О нас</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> support@freework.com</li>
+                    <li><i class="fas fa-phone"></i> +7 (123) 456-78-90</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 FREE WORK. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
